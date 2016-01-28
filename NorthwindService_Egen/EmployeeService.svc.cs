@@ -46,7 +46,48 @@ namespace NorthwindService_Egen
 
         public int saveEmployee(int EmployeeID, string LastName, string FirstName, string Title, string Address, string City, string Country, string Notes)
         {
-            string updateQuery = ""
+            string updateQuery = "UPDATE [NORTHWND].[dbo].[Employees] SET" +
+                " LastName = @LastName," +
+                " FirstName = @FirstName," +
+                " Title = @Title," +
+                " Address = @Address," +
+                " City = @City," +
+                " Country = @Country," +
+                " Notes = @Notes" +
+                " WHERE EmployeeID = @EmployeeID";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+
+                SqlCommand cmd = new SqlCommand(updateQuery, connection);
+
+                SqlParameter paramEmployeeID = new SqlParameter("@EmployeeID", EmployeeID);
+                cmd.Parameters.Add(paramEmployeeID);
+
+                SqlParameter paramLastName = new SqlParameter("@LastName", LastName);
+                cmd.Parameters.Add(paramLastName);
+
+                SqlParameter paramFirstName = new SqlParameter("@FirstName", FirstName);
+                cmd.Parameters.Add(paramFirstName);
+
+                SqlParameter paramTitle = new SqlParameter("@Title", Title);
+                cmd.Parameters.Add(paramTitle);
+
+                SqlParameter paramAddress = new SqlParameter("@Address", Address);
+                cmd.Parameters.Add(paramAddress);
+
+                SqlParameter paramCity = new SqlParameter("@City", City);
+                cmd.Parameters.Add(paramCity);
+
+                SqlParameter paramCountry = new SqlParameter("@Country", Country);
+                cmd.Parameters.Add(paramCountry);
+
+                SqlParameter paramNotes = new SqlParameter("@Notes", Notes);
+                cmd.Parameters.Add(paramNotes);
+
+                connection.Open();
+                return cmd.ExecuteNonQuery();
+            }
         }
     }
 }
