@@ -23,7 +23,9 @@ namespace NorthwindService_Egen
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand cmd = new SqlCommand(getQuery, connection);
+                try
+                {
+                     SqlCommand cmd = new SqlCommand(getQuery, connection);
 
                 connection.Open();
 
@@ -40,6 +42,12 @@ namespace NorthwindService_Egen
                     emp.Country = reader["Country"].ToString();
                     emp.Notes = reader["Notes"].ToString();
                 }
+                }
+                catch (FaultException ex)
+                {
+                    throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
+                }
+                
             }
             return emp;           
         }
@@ -58,35 +66,42 @@ namespace NorthwindService_Egen
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand(updateQuery, connection);
 
-                SqlCommand cmd = new SqlCommand(updateQuery, connection);
+                    SqlParameter paramEmployeeID = new SqlParameter("@EmployeeID", EmployeeID);
+                    cmd.Parameters.Add(paramEmployeeID);
 
-                SqlParameter paramEmployeeID = new SqlParameter("@EmployeeID", EmployeeID);
-                cmd.Parameters.Add(paramEmployeeID);
+                    SqlParameter paramLastName = new SqlParameter("@LastName", LastName);
+                    cmd.Parameters.Add(paramLastName);
 
-                SqlParameter paramLastName = new SqlParameter("@LastName", LastName);
-                cmd.Parameters.Add(paramLastName);
+                    SqlParameter paramFirstName = new SqlParameter("@FirstName", FirstName);
+                    cmd.Parameters.Add(paramFirstName);
 
-                SqlParameter paramFirstName = new SqlParameter("@FirstName", FirstName);
-                cmd.Parameters.Add(paramFirstName);
+                    SqlParameter paramTitle = new SqlParameter("@Title", Title);
+                    cmd.Parameters.Add(paramTitle);
 
-                SqlParameter paramTitle = new SqlParameter("@Title", Title);
-                cmd.Parameters.Add(paramTitle);
+                    SqlParameter paramAddress = new SqlParameter("@Address", Address);
+                    cmd.Parameters.Add(paramAddress);
 
-                SqlParameter paramAddress = new SqlParameter("@Address", Address);
-                cmd.Parameters.Add(paramAddress);
+                    SqlParameter paramCity = new SqlParameter("@City", City);
+                    cmd.Parameters.Add(paramCity);
 
-                SqlParameter paramCity = new SqlParameter("@City", City);
-                cmd.Parameters.Add(paramCity);
+                    SqlParameter paramCountry = new SqlParameter("@Country", Country);
+                    cmd.Parameters.Add(paramCountry);
 
-                SqlParameter paramCountry = new SqlParameter("@Country", Country);
-                cmd.Parameters.Add(paramCountry);
+                    SqlParameter paramNotes = new SqlParameter("@Notes", Notes);
+                    cmd.Parameters.Add(paramNotes);
 
-                SqlParameter paramNotes = new SqlParameter("@Notes", Notes);
-                cmd.Parameters.Add(paramNotes);
+                    connection.Open();
+                    return cmd.ExecuteNonQuery();
+                }
+                catch (FaultException ex)
+                {
+                    throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
+                }
 
-                connection.Open();
-                return cmd.ExecuteNonQuery();
             }
         }
     }
