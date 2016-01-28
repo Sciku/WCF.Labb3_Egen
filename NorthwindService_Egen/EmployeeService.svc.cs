@@ -23,33 +23,41 @@ namespace NorthwindService_Egen
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
-                {
-                     SqlCommand cmd = new SqlCommand(getQuery, connection);
+                using (SqlCommand cmd = new SqlCommand(getQuery, connection))
+                { 
+                    try
+                    {
+                        connection.Open();
+                    }
+                    catch (FaultException ex)
+                    {
 
-                connection.Open();
+                        throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
+                    }
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            emp.EmployeeID = Convert.ToInt32(reader["EmployeeID"].ToString());
+                            emp.LastName = reader["LastName"].ToString();
+                            emp.FirstName = reader["FirstName"].ToString();
+                            emp.Title = reader["Title"].ToString();
+                            emp.Address = reader["Address"].ToString();
+                            emp.City = reader["City"].ToString();
+                            emp.Country = reader["Country"].ToString();
+                            emp.Notes = reader["Notes"].ToString();
+                        }
+                        var nullEmployee = emp.LastName == null || emp.FirstName == null || emp.Title == null || emp.Address == null || emp.City == null || emp.Country == null || emp.Notes == null;
 
-                while (reader.Read())
-                {
-                    emp.EmployeeID = Convert.ToInt32(reader["EmployeeID"].ToString());
-                    emp.LastName = reader["LastName"].ToString();
-                    emp.FirstName = reader["FirstName"].ToString();
-                    emp.Title = reader["Title"].ToString();
-                    emp.Address = reader["Address"].ToString();
-                    emp.City = reader["City"].ToString();
-                    emp.Country = reader["Country"].ToString();
-                    emp.Notes = reader["Notes"].ToString();
-                }
-                }
-                catch (FaultException ex)
-                {
-                    throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
-                }
-                
+                        if (nullEmployee)
+                        {
+                            throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:");
+                        }
+                    }
+                }                      
             }
-            return emp;           
+            return emp;
         }
 
         public int saveEmployee(int EmployeeID, string LastName, string FirstName, string Title, string Address, string City, string Country, string Notes)
