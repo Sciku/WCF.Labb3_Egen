@@ -23,6 +23,7 @@ namespace NorthwindService_Egen
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+<<<<<<< HEAD
                 using (SqlCommand cmd = new SqlCommand(getQuery, connection))
                 { 
                     try
@@ -56,6 +57,25 @@ namespace NorthwindService_Egen
                         }
                     }
                 }                      
+=======
+                SqlCommand cmd = new SqlCommand(getQuery, connection);
+
+                connection.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    emp.EmployeeID = Convert.ToInt32(reader["EmployeeID"].ToString());
+                    emp.LastName = reader["LastName"].ToString();
+                    emp.FirstName = reader["FirstName"].ToString();
+                    emp.Title = reader["Title"].ToString();
+                    emp.Address = reader["Address"].ToString();
+                    emp.City = reader["City"].ToString();
+                    emp.Country = reader["Country"].ToString();
+                    emp.Notes = reader["Notes"].ToString();
+                }
+>>>>>>> parent of 71acb5d... Gjort några Faultexceptions
             }
             return emp;
         }
@@ -74,42 +94,35 @@ namespace NorthwindService_Egen
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                try
-                {
-                    SqlCommand cmd = new SqlCommand(updateQuery, connection);
 
-                    SqlParameter paramEmployeeID = new SqlParameter("@EmployeeID", EmployeeID);
-                    cmd.Parameters.Add(paramEmployeeID);
+                SqlCommand cmd = new SqlCommand(updateQuery, connection);
 
-                    SqlParameter paramLastName = new SqlParameter("@LastName", LastName);
-                    cmd.Parameters.Add(paramLastName);
+                SqlParameter paramEmployeeID = new SqlParameter("@EmployeeID", EmployeeID);
+                cmd.Parameters.Add(paramEmployeeID);
 
-                    SqlParameter paramFirstName = new SqlParameter("@FirstName", FirstName);
-                    cmd.Parameters.Add(paramFirstName);
+                SqlParameter paramLastName = new SqlParameter("@LastName", LastName);
+                cmd.Parameters.Add(paramLastName);
 
-                    SqlParameter paramTitle = new SqlParameter("@Title", Title);
-                    cmd.Parameters.Add(paramTitle);
+                SqlParameter paramFirstName = new SqlParameter("@FirstName", FirstName);
+                cmd.Parameters.Add(paramFirstName);
 
-                    SqlParameter paramAddress = new SqlParameter("@Address", Address);
-                    cmd.Parameters.Add(paramAddress);
+                SqlParameter paramTitle = new SqlParameter("@Title", Title);
+                cmd.Parameters.Add(paramTitle);
 
-                    SqlParameter paramCity = new SqlParameter("@City", City);
-                    cmd.Parameters.Add(paramCity);
+                SqlParameter paramAddress = new SqlParameter("@Address", Address);
+                cmd.Parameters.Add(paramAddress);
 
-                    SqlParameter paramCountry = new SqlParameter("@Country", Country);
-                    cmd.Parameters.Add(paramCountry);
+                SqlParameter paramCity = new SqlParameter("@City", City);
+                cmd.Parameters.Add(paramCity);
 
-                    SqlParameter paramNotes = new SqlParameter("@Notes", Notes);
-                    cmd.Parameters.Add(paramNotes);
+                SqlParameter paramCountry = new SqlParameter("@Country", Country);
+                cmd.Parameters.Add(paramCountry);
 
-                    connection.Open();
-                    return cmd.ExecuteNonQuery();
-                }
-                catch (FaultException ex)
-                {
-                    throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
-                }
+                SqlParameter paramNotes = new SqlParameter("@Notes", Notes);
+                cmd.Parameters.Add(paramNotes);
 
+                connection.Open();
+                return cmd.ExecuteNonQuery();
             }
         }
     }

@@ -12,7 +12,6 @@ namespace NorthwindService_Egen
     public interface IEmployeeService
     {
         [OperationContract]
-        [FaultContract(typeof(FaultException))]
         Employee GetEmployeeByID(int EmployeeID);
 
         [OperationContract]
