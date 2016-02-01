@@ -24,6 +24,7 @@ namespace NorthwindService_Egen
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 using (SqlCommand cmd = new SqlCommand(getQuery, connection))
                 { 
                     try
@@ -58,6 +59,8 @@ namespace NorthwindService_Egen
                     }
                 }                      
 =======
+=======
+>>>>>>> parent of 71acb5d... Gjort några Faultexceptions
                 SqlCommand cmd = new SqlCommand(getQuery, connection);
 
                 connection.Open();
@@ -75,6 +78,9 @@ namespace NorthwindService_Egen
                     emp.Country = reader["Country"].ToString();
                     emp.Notes = reader["Notes"].ToString();
                 }
+<<<<<<< HEAD
+>>>>>>> parent of 71acb5d... Gjort några Faultexceptions
+=======
 >>>>>>> parent of 71acb5d... Gjort några Faultexceptions
             }
             return emp;
