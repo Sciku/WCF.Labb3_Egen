@@ -19,14 +19,12 @@ namespace NorthwindService_Egen
             Employee emp = new Employee();
 
             string getQuery = "SELECT [EmployeeID], [LastName], [FirstName], [Title], [Address], [City], [Country], [Notes]" +
-                 "FROM [NORTHWND].[dbo].[Employees] WHERE [EmployeeID] =" + EmployeeID;
+                 "FROM [NORTHWND].[dbo].[Employees] WHERE [EmployeeeeeID] =" + EmployeeID;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-<<<<<<< HEAD
-<<<<<<< HEAD
                 using (SqlCommand cmd = new SqlCommand(getQuery, connection))
-                { 
+                {
                     try
                     {
                         connection.Open();
@@ -57,31 +55,42 @@ namespace NorthwindService_Egen
                             throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:");
                         }
                     }
-                }                      
-=======
-=======
->>>>>>> parent of 71acb5d... Gjort några Faultexceptions
-                SqlCommand cmd = new SqlCommand(getQuery, connection);
-
-                connection.Open();
-
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    emp.EmployeeID = Convert.ToInt32(reader["EmployeeID"].ToString());
-                    emp.LastName = reader["LastName"].ToString();
-                    emp.FirstName = reader["FirstName"].ToString();
-                    emp.Title = reader["Title"].ToString();
-                    emp.Address = reader["Address"].ToString();
-                    emp.City = reader["City"].ToString();
-                    emp.Country = reader["Country"].ToString();
-                    emp.Notes = reader["Notes"].ToString();
                 }
-<<<<<<< HEAD
->>>>>>> parent of 71acb5d... Gjort några Faultexceptions
-=======
->>>>>>> parent of 71acb5d... Gjort några Faultexceptions
+
+                using (SqlCommand cmd = new SqlCommand(getQuery, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                    }
+                    catch (FaultException ex)
+                    {
+
+                        throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:\r\n{ex.Message}");
+                    }
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            emp.EmployeeID = Convert.ToInt32(reader["EmployeeID"].ToString());
+                            emp.LastName = reader["LastName"].ToString();
+                            emp.FirstName = reader["FirstName"].ToString();
+                            emp.Title = reader["Title"].ToString();
+                            emp.Address = reader["Address"].ToString();
+                            emp.City = reader["City"].ToString();
+                            emp.Country = reader["Country"].ToString();
+                            emp.Notes = reader["Notes"].ToString();
+                        }
+                        var nullEmployee = emp.LastName == null || emp.FirstName == null || emp.Title == null || emp.Address == null || emp.City == null || emp.Country == null || emp.Notes == null;
+
+                        if (nullEmployee)
+                        {
+                            throw new FaultException($"Fel med tjänsten, se följande felmeddelande för mer information:");
+                        }
+                    }
+                }
+
             }
             return emp;
         }
